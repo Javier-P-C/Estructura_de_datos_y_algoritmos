@@ -56,38 +56,118 @@ std::vector<T> Sorts<T>::bubbleSort(const std::vector<T> &source) {
 template <class T>
 std::vector<T> Sorts<T>::selectionSort(const std::vector<T> &source) {
 	std::vector<T> v(source);
+  int pos = 0;
+  for (int i=0;i<source.size()-1;i++)
+  {
+    pos=i;
+
+    for (int j=i+1;j<=source.size()-1;j++)
+    {
+      if (v[j]<v[pos])
+      {
+        pos=j;
+      }
+    }
+
+    if (pos!=i)
+    {
+      swap(v,pos,i);
+    }
+  }
+  /*for (int i=0;i<source.size()-1;i++)
+  {
+    std::cout<<i<<": "<<v[i]<<std::endl;
+  }*/
 	return v;
 }
 
 template <class T>
 std::vector<T> Sorts<T>::insertionSort(const std::vector<T> &source) {
 	std::vector<T> v(source);
+
+  for (int i=1;i<=source.size()-1;i++)
+  {
+    for (int j=i;j>0 && v[j]<v[j-1];j--)
+    {
+      swap(v,j,j-1);
+    }
+  }
 	return v;
 }
 
-template <class T>
+/*template <class T>
 std::vector<T> Sorts<T>::shellSort(const std::vector<T> &source) {
 	std::vector<T> v(source);
 	return v;
-}
+}*/
 
 template <class T>
 void Sorts<T>::copyArray(std::vector<T> &A, std::vector<T> &B, int low, int high) {
+  for(int i=low;i<=high;i++)
+  {
+    A[i]=B[i];
+  }
 }
 
 template <class T>
 void Sorts<T>::mergeArray(std::vector<T> &A, std::vector<T> &B, int low, int mid, int high) {
+  int i = low;
+  int j = mid+1;
+  int k = low;
+
+  while(i <= mid && j <= high)
+  {
+    if (A[i]<A[j])
+    {
+      B[k]=A[i];
+      i++;
+    }
+    else
+    {
+      B[k]=A[j];
+      j++;
+    }
+    k++;
+  }
+
+  if (i <= mid)
+  {
+    for (;i <= mid; i++)
+    {
+      //B[k++]=A[j];
+      B[k] = A[i];
+      k++;
+    }
+  }
+  else
+  {
+    for (;j<=high;j++)
+    {
+      //B[k++]=A[j];
+      B[k]=A[j];
+      k++;
+    }
+  }
 }
 
 template <class T>
 void Sorts<T>::mergeSplit(std::vector<T> &A, std::vector<T> &B, int low, int high) {
+  int mid = (low+high)/2;
+  if (high - low < 1)
+  {
+    return;
+  }
+  mergeSplit(A,B,low,mid);
+  mergeSplit(A,B,mid+1,high);
+  mergeArray(A,B,low,mid,high);
+  copyArray(A,B,low,high);
 }
 
 template <class T>
 std::vector<T> Sorts<T>::mergeSort(const std::vector<T> &source) {
 	std::vector<T> v(source);
 	std::vector<T> tmp(v.size());
-
+  mergeSplit(v,tmp,0,v.size()-1);
 	return v;
 }
 
