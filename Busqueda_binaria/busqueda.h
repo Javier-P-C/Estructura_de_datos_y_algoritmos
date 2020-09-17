@@ -11,7 +11,7 @@ int busquedaBin_sec(int arr[],int size,int valor)
   int low = 0;
   int high = size-1;
 
-  while (low < high)
+  while (low < high) //low<=high
   {
     mid = (high+low)/2;
     if (valor==arr[mid])
@@ -35,7 +35,7 @@ int busqueda_aux(int arr[],int valor,int low,int high)
  {
    int mid;
    mid=(low+high)/2;
-   if (low<=high)
+   if (low<=high) //low<high
    {
       if (valor == arr[mid])
       {
