@@ -11,7 +11,7 @@ int busquedaBin_sec(int arr[],int size,int valor)
   int low = 0;
   int high = size-1;
 
-  while (low < high) //low<=high
+  while (low < high) //Si no se encuentra el elemento devuelve el menor, con low<=high se devuelve el mayor
   {
     mid = (high+low)/2;
     if (valor==arr[mid])

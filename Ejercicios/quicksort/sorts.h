@@ -43,16 +43,8 @@ int Sorts<T>::partition(std::vector<T> &v, int low, int high)
       i++;
     }
   }
-  swap(v,i,high);
+  swap(v,i,high); //(i+1)
   return i;
-}
-
-
-template <class T>
-std::vector<T> Sorts<T>::quickSort(const std::vector<T> &source) {
-  std::vector<T> v(source);
-	quickHelper(v,0,v.size()-1);
-  return v;
 }
 
 template <class T>
@@ -64,6 +56,17 @@ void Sorts<T>::quickHelper(std::vector<T> &v, int low, int high)
     quickHelper(v,low,pivot-1);
     quickHelper(v,pivot+1,high);
   }
+}
+
+template <class T>
+std::vector<T> Sorts<T>::quickSort(const std::vector<T> &source) {
+  std::vector<T> v(source);
+	quickHelper(v,0,v.size()-1);
+  /*for(int i=0;i<v.size();i++)
+  {
+    std::cout<<v[i]<<std::endl;
+  }*/
+  return v;
 }
 
 #endif /* SORTS_H_ */
