@@ -63,6 +63,17 @@ class List
     bool contains(T) const;
     //std::string toString() const;
 	  //void operator= (const List&) throw (OutOfMemory);
+    
+    //void addBefore(ListIterator<T>&, T) throw (IllegalAction, OutOfMemory);
+	  //void addAfter(ListIterator<T>&, T) throw (IllegalAction, OutOfMemory);
+	  //T    removeCurrent(ListIterator<T>&) throw (IllegalAction);
+
+    bool set(int,T) throw (IndexOutOfBounds);
+    int indexOf(T) const;
+    int lastIndex(T) const;
+    T remove(int) throw (IndexOutOfBounds);
+    bool removeFirstOcurrence(T);
+    bool removeLastOcurrence(T);
 };
 
 //Cuando se crea la lista sin nada
@@ -271,6 +282,191 @@ bool List<T>::contains(T val) const
 		p = p->next;
 	}
 	return false;
+}
+
+//Cambia el valor de un índice
+template <class T>
+bool List<T>::set(int index,T val) throw (IndexOutOfBounds)
+{
+  Link<T>  *p;
+  int pos = 0;
+
+  if((index < 0) || (index<=size))
+  {
+    throw IndexOutOfBounds();
+  }
+
+  p = head;
+  while(pos!=index)
+  {
+    p = p->next;
+    pos++;
+  }
+
+  p->value = val;
+
+  return true;
+}
+
+//Devuelve el primer ínidice que contenga el valor recibido
+template <class T>
+int List<T>::indexOf(T val) const
+{
+  int index = 0;
+  Link<T> *p;
+
+  p = head;
+  while(p != 0)
+  {
+    if(p->value == val)
+    {
+      return index;
+    }
+    p = p->next;
+    index++;
+  }
+
+  return -1;
+}
+
+//Devuelve el útlimo ínidce donde el se encuentra el valor recibido
+template <class T>
+int List<T>::lastIndex(T val) const
+{
+  int index = 0;
+  int pos = -1;
+  Link<T> *p;
+
+  p=head;
+  while(p != 0)
+  {
+    if(p->value == val)
+    {
+      pos = index;
+    }
+    p = p->next;
+    index++;
+  }
+
+  return pos;
+}
+
+//Borra el elemento del índice
+template <class T>
+T List<T>::remove(int index) throw (IndexOutOfBounds)
+{
+  Link<T> *p, *q;
+  int pos = 0;
+  T val;
+
+  if((index < 0) || (index <=size))
+  {
+    throw IndexOutOfBounds();
+  }
+
+  if(index == 0)
+  {
+    removeFirst();
+    return;
+  }
+
+  p = head;
+  q = 0;
+  while(pos != index)
+  {
+    q=p;
+    p = p->next;
+    pos++;
+  }
+
+  val = p->value;
+  q->next = p->next;
+
+  delete p;
+  size--;
+  
+  return val;
+}
+
+//Borra el primer lugar donde aparece el valor recibido
+template <class T>
+bool List<T>::removeFirstOcurrence(T val)
+{
+  Link<T> *p, *q;
+  Link<T> *prev, *curr;
+
+  p = head; 
+  q = 0;
+  curr = 0;
+  prev = 0;
+
+  while(p != 0)
+  {
+    if(p->value == val)
+    {
+      prev = q;
+      curr = p;
+      break;
+    }
+    q = p;
+    p = p->next;
+  }
+
+  if(curr != 0)
+  {
+    if(prev == 0)
+    {
+      head = curr->next;
+    }
+    else
+    {
+      prev->next = curr->next;
+    }
+    size--;
+    return true;
+  }
+
+  return false;
+}
+
+//Borra el último lugar donde aparece el valor recibido
+template <class T>
+bool List<T>::removeLastOcurrence(T val)
+{
+  Link<T> *p, *q;
+  Link<T> *prev, *curr;
+
+  p = head; 
+  q = 0;
+  curr = 0;
+  prev = 0;
+
+  while(p != 0)
+  {
+    if(p->value == val)
+    {
+      prev = q;
+      curr = p;
+    }
+    q = p;
+    p = p->next;
+  }
+
+  if(curr != 0)
+  {
+    if(prev == 0)
+    {
+      head = curr->next;
+    }
+    else
+    {
+      prev->next = curr->next;
+    }
+    size--;
+    return true;
+  }
+
+  return false;
 }
 
 #endif
