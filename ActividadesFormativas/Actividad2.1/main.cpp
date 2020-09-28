@@ -34,9 +34,10 @@ std::string List<T>::toString() const {
 */
 
 int main(int argc, char* argv[]) {
+  
 	List<int> b1;
 	string ans;
-
+ 
 	b1.add(2);
 	ans = "[2]";
 	cout << " 1 " <<	(!ans.compare(b1.toString()) ? "success\n" : "fail\n");
@@ -66,5 +67,7 @@ int main(int argc, char* argv[]) {
 	b1.remove(1);
 	ans = "[13, 32]";
 	cout << " 8 " <<	(!ans.compare(b1.toString()) ? "success\n" : "fail\n");
+
+  //std::cout<<"END"<<endl;
 
 }

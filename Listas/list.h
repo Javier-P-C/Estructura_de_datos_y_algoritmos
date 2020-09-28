@@ -18,7 +18,7 @@ class Link
     Link(const Link<T>&);
     
     T value;
-    Link* next;
+    Link<T>* next;
 
     //Indica cuales clases pueden tener acceso a los atributos y métodos privados de Link
     friend class List<T>;
