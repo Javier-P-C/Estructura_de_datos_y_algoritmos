@@ -22,10 +22,13 @@ class Link
     friend class List<T>;
 };
 
+//Cuando recibe solo el valor
 template <class T> 
 Link<T>::Link(T val):value(val),next(0) {}
+//Cuando recibe el valor y el siguiente elemento de la Lista
 template <class T> 
 Link<T>::Link(T val,Link<T> *_next):value(val),next(_next) {}
+//Para copiar un elemento
 template <class T> 
 Link<T>::Link(const Link<T> &source):value(source.value),next(source.next) {}
 
@@ -52,6 +55,7 @@ class List
     std::string toString() const; 
 };
 
+//Cuando se crea la lista sin nada
 template <class T>
 List<T>::List()
 {
@@ -59,6 +63,7 @@ List<T>::List()
   size = 0;
 }
 
+//Cuando se quiere hacer una copia de otra lista
 template <class T>
 List<T>::List(const List<T> &source):size(source.size)
 {
@@ -76,30 +81,33 @@ List<T>::List(const List<T> &source):size(source.size)
   }
 }
 
+//Borra la Lista
 template <class T>
 List<T>::~List()
 {
   clear();
 }
 
+//Libera el espacio en memoria
 template <class T>
 void List<T>::clear()
 {
   Link<T> *p,*q;
   p = head;
-  q = head->next;
+  q = 0;
 
   while(p != 0)
   {
+    q = p->next;
     delete p;
     p = q;
-    q = q->next;
   }
 
   size = 0;
   head = 0;
 }
 
+//Añade un elemento al final de la lista
 template <class T>
 void List<T>::add(T val)
 {
@@ -124,6 +132,7 @@ void List<T>::add(T val)
   size++;
 }
 
+//Devuelve el índice donde se encuentra el valor recibido
 template <class T>
 int List<T>::find(T val)
 {
@@ -142,6 +151,7 @@ int List<T>::find(T val)
   return -1;
 }
 
+//Cambia el valor de un índice
 template <class T>
 void List<T>::update(int index,T val)
 {
@@ -159,6 +169,7 @@ void List<T>::update(int index,T val)
   }
 }
 
+//Borra el elemento del índice
 template <class T>
 T List<T>::remove(int index)
 {
@@ -191,6 +202,7 @@ T List<T>::remove(int index)
   return val;
 }
 
+//Remueve el primer elemento de la lista
 template <class T>
 T List<T>::removeFirst()
 {
@@ -207,6 +219,7 @@ T List<T>::removeFirst()
 
   return val;
 }
+
 
 template <class T>
 std::string List<T>::toString() const {
