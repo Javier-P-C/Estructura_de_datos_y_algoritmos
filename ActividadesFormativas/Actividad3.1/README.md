@@ -1,4 +1,3 @@
-void add(T);
 Análisis de Complejidad:
 
 void add(T):
