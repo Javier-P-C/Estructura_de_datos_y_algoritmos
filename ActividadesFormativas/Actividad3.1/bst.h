@@ -42,6 +42,7 @@ Node<T>::Node(T val):value(val),left(0),right(0) {}
 template <class T>
 Node<T>::Node(Node<T> *le,Node<T> *ri,T val):left(le),right(ri),value(val) {}
 
+//Añade un elemento al árbol
 template <class T>
 void Node<T>::add(T val)
 {
@@ -61,6 +62,7 @@ void Node<T>::add(T val)
   }
 }
 
+//Ordena los elementos para imprimirlos
 template <class T>
 void Node<T>::visit(std::stringstream &aux)
 {
@@ -84,6 +86,7 @@ void Node<T>::visit(std::stringstream &aux)
   aux<<aux1.str()<<aux2.str()<<aux3.str()<<aux4.str();
 }
 
+//Calcula la altura de la rama más larga
 template <class T>
 int Node<T>::height()
 {
@@ -106,6 +109,7 @@ int Node<T>::height()
   return level;
 }
 
+//Busca los ancestros de un elemento para poder imprimirlos
 template <class T>
 void Node<T>::ancestors(T val,std::stringstream &aux)
 {
@@ -127,6 +131,7 @@ void Node<T>::ancestors(T val,std::stringstream &aux)
   }
 }
 
+//Calcula el nivel del árbol en el que se encuentra el elemento
 template <class T>
 int Node<T>::whatlevelamI(T val)
 {
@@ -137,6 +142,7 @@ int Node<T>::whatlevelamI(T val)
   return 1;
 }
 
+//Ordena preorder
 template <class T>
 void Node<T>::preorder(std::stringstream &aux)
 {
@@ -153,6 +159,7 @@ void Node<T>::preorder(std::stringstream &aux)
   }
 }
 
+//Ordena inorder
 template <class T>
 void Node<T>::inorder(std::stringstream &aux)
 {
@@ -165,6 +172,7 @@ void Node<T>::inorder(std::stringstream &aux)
     right->inorder(aux);
 }
 
+//Ordena postorder
 template <class T>
 void Node<T>::postorder(std::stringstream &aux)
 {
@@ -181,6 +189,7 @@ void Node<T>::postorder(std::stringstream &aux)
   aux<<value;
 }
 
+//Ordena nivel por nivel
 template <class T>
 void Node<T>::levelByLevel(std::stringstream &aux)
 {
@@ -192,6 +201,7 @@ void Node<T>::levelByLevel(std::stringstream &aux)
   }
 }
 
+//
 template <class T>
 void Node<T>::stringLevel(std::stringstream &aux,int levels)
 {
@@ -202,7 +212,7 @@ void Node<T>::stringLevel(std::stringstream &aux,int levels)
 			aux << " ";
 		}
     aux<<value;
-    return; //Checar por si no funciona------------------------------------------------------
+    return; 
   }
   if(left!=0)
     left->stringLevel(aux,levels-1);
@@ -210,6 +220,7 @@ void Node<T>::stringLevel(std::stringstream &aux,int levels)
     right->stringLevel(aux,levels-1);
 }
 
+//Busca un elemento en el árbol y devuelve true o false dependiendo de si se encuentra
 template <class T>
 bool Node<T>::find(T val)
 {
@@ -233,6 +244,7 @@ bool Node<T>::find(T val)
   return false;
 }
 
+//Quita del árbol los hijos de la raíz
 template <class T>
 void Node<T>::removeChilds()
 {
@@ -268,6 +280,8 @@ class BST
     int whatlevelamI(T);
     bool empty();
 };
+
+//Los métodos de BST son el intermediario entre el main y los nodos
 
 template <class T>
 BST<T>::BST():root(0) {}

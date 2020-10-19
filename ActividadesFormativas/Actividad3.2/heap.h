@@ -29,6 +29,7 @@ public:
 	std::string toString() const;
 };
 
+//
 template <class T>
 Heap<T>::Heap(unsigned int sze)
 {
