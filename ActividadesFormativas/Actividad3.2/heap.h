@@ -1,16 +1,11 @@
 #ifndef HEAP_H_
 #define HEAP_H_
 
-#include <string>
-#include <sstream>
-#include "exception.h"
-#include <iostream>
-
 template <class T>
 class Heap {
 private:
 	T *data;
-	unsigned int size;
+	unsigned int size_;
 	unsigned int count;
 	
 	unsigned int parent(unsigned int) const;
@@ -20,22 +15,25 @@ private:
 	void swap(unsigned int, unsigned int);
 	
 public:
-	Heap(unsigned int) throw (OutOfMemory);
+	Heap(unsigned int);
 	~Heap();
+  
+  void push(T);
+	void pop();
+  T top();
+  int size();
+
 	bool empty() const;
 	bool full() const;
-	void add(T) throw (Overflow);
-	T remove() throw (NoSuchElement);
 	void clear();
 	std::string toString() const;
 };
 
 template <class T>
-Heap<T>::Heap(unsigned int sze) throw (OutOfMemory) {
-  size = sze;
-  data = new T [size];
-  if(data == 0)
-    throw OutOfMemory();
+Heap<T>::Heap(unsigned int sze)
+{
+  size_ = sze;
+  data = new T [size_];
   count = 0;
 }
 
@@ -51,7 +49,7 @@ bool Heap<T>::empty() const {
 
 template <class T>
 bool Heap<T>::full() const {
-	return (count == size);
+	return (count == size_);
 }
 
 template <class T>
@@ -94,9 +92,8 @@ void Heap<T>::heapify(unsigned int pos) {
 }
 
 template <class T>
-void Heap<T>::add(T val) throw (Overflow) {
-  if(full())
-    throw Overflow();
+void Heap<T>::push(T val)
+{
   int pos = count;
   data[count++] = val;
   while(pos>0 && val<data[parent(pos)])
@@ -107,36 +104,40 @@ void Heap<T>::add(T val) throw (Overflow) {
 }
 
 template <class T>
-T Heap<T>::remove() throw (NoSuchElement) {
-	if(empty())
-    throw NoSuchElement();
-  T aux;
-	aux = data[0];
+void Heap<T>::pop()
+{
   data[0] = data[--count];
   heapify(0);
-	return aux;
 }
 
 template <class T>
 void Heap<T>::clear() {
   delete [] data;
   count = 0;
-  size = 0;
+  size_ = 0;
+}
+
+template <class T>
+T Heap<T>::top()
+{
+  return data[0];
+}
+
+template <class T>
+int Heap<T>::size()
+{
+  return count;
 }
 	
-
 template <class T>
 std::string Heap<T>::toString() const {
 	std::stringstream aux;
-	
-	aux << "[";
-	for (unsigned int i = 0; i < count; i++) {
+	aux << "[";	for (unsigned int i = 0; i < count; i++) {
 		if (i != 0) {
 			aux << " ";
-		}
-		aux << data[i];
-	}
-	aux << "]";
+		} aux << data[i];
+	} aux << "]";
 	return aux.str();
 }
-#endif /* HASH_H_ */
+
+#endif
