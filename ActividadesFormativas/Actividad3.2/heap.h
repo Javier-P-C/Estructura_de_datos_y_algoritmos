@@ -29,7 +29,7 @@ public:
 	std::string toString() const;
 };
 
-//
+//Constructor
 template <class T>
 Heap<T>::Heap(unsigned int sze)
 {
@@ -38,36 +38,43 @@ Heap<T>::Heap(unsigned int sze)
   count = 0;
 }
 
+//Destructor
 template <class T>
 Heap<T>::~Heap() {
   clear();
  }
 
+//Checa si hay elementos en el heap
 template <class T>
 bool Heap<T>::empty() const {
   return (count == 0);
 }
 
+//Checa si está lleno el heap
 template <class T>
 bool Heap<T>::full() const {
 	return (count == size_);
 }
 
+//Devuelve la poscición donde debe estar el padre
 template <class T>
 unsigned int Heap<T>::parent(unsigned int pos) const {
 	return ((pos-1)/2);
 }
 
+//Devuelve la posición donde debe ir el hijo izquierdo
 template <class T>
 unsigned int Heap<T>::left(unsigned int pos) const {
 	return (pos*2+1);
 }
 
+//Devuelve el elemento donde debe ir el hijo derecho
 template <class T>
 unsigned int Heap<T>::right(unsigned int pos) const {
 	return (pos*2+2);
 }
 
+//Cambia de posición dos elementos del heap
 template <class T>
 void Heap<T>::swap(unsigned int i, unsigned int j) {
 	T aux = data[i];
@@ -75,6 +82,7 @@ void Heap<T>::swap(unsigned int i, unsigned int j) {
 	data[j] = aux;
 }
 
+//Arregla inconsistencias del árbol
 template <class T>
 void Heap<T>::heapify(unsigned int pos) {
   unsigned int le = left(pos);
@@ -92,6 +100,7 @@ void Heap<T>::heapify(unsigned int pos) {
 	}
 }
 
+//Añade un elemento al heap
 template <class T>
 void Heap<T>::push(T val)
 {
@@ -104,6 +113,7 @@ void Heap<T>::push(T val)
   }
 }
 
+//Elimina el primer el elemento del heap
 template <class T>
 void Heap<T>::pop()
 {
@@ -111,6 +121,7 @@ void Heap<T>::pop()
   heapify(0);
 }
 
+//Deja libre la memoria utilizada
 template <class T>
 void Heap<T>::clear() {
   delete [] data;
@@ -118,18 +129,21 @@ void Heap<T>::clear() {
   size_ = 0;
 }
 
+//Devuelve el valor de la raíz
 template <class T>
 T Heap<T>::top()
 {
   return data[0];
 }
 
+//Devuelve la cantidad de elementos en el heap
 template <class T>
 int Heap<T>::size()
 {
   return count;
 }
-	
+
+//Imprime los elementos del heap
 template <class T>
 std::string Heap<T>::toString() const {
 	std::stringstream aux;
