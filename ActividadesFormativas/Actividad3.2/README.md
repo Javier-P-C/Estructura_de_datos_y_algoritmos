@@ -13,4 +13,4 @@
     Es constante, O(1), porque solo devuelve un atributo de la clase
 
   bool empty()
-    Es constante pues devuelve un valor booleano de acuerdo a una condicinal.
+    Es constante, O(1) pues devuelve un valor booleano de acuerdo a una condicinal.
