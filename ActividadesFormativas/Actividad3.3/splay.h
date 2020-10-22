@@ -34,6 +34,7 @@ class Node
     void preorder(std::stringstream &aux) const;
 };
 
+//Constructor
 template <class T>
 Node<T>::Node(T val)
 {
@@ -43,6 +44,7 @@ Node<T>::Node(T val)
   parent = 0;
 }
 
+//Constructor
 template <class T>
 Node<T>::Node(T val, Node<T> *le,Node<T> *ri,Node<T> *prnt)
 {
@@ -52,6 +54,7 @@ Node<T>::Node(T val, Node<T> *le,Node<T> *ri,Node<T> *prnt)
   parent = prnt;
 }
 
+//Busca y devuelve el nodo que sustituye al que se recibe como parámetro
 template <class T>
 Node<T>* Node<T>::succesor()
 {
@@ -93,6 +96,7 @@ Node<T>* Node<T>::succesor()
   return next;
 }
 
+//Rota los elementos a la derecha
 template <class T>
 Node<T>* Node<T>::rot_right(Node<T> *pointer)
 {
@@ -117,6 +121,7 @@ Node<T>* Node<T>::rot_right(Node<T> *pointer)
   return pointer_son; 
 }
 
+//Rota los elementos a la izquierda
 template <class T>
 Node<T>* Node<T>::rot_left(Node<T> *pointer)
 {
@@ -141,6 +146,7 @@ Node<T>* Node<T>::rot_left(Node<T> *pointer)
   return pointer_son; 
 }
 
+//Añade un elemento al árbol y manda a llamar a splay()
 template <class T>
 Node<T>* Node<T>::add(T val)
 {
@@ -168,6 +174,7 @@ Node<T>* Node<T>::add(T val)
 	}
 }
 
+//Busca y remueve un elemento del árbol, llama a splay()
 template <class T>
 Node<T>* Node<T>::remove(T val)
 {
@@ -227,6 +234,7 @@ Node<T>* Node<T>::remove(T val)
   return 0;
 }
 
+//Busca y devuelve el nodo que contiene el valor recibido de parámetro, llama a splay()
 template <class T>
 Node<T>* Node<T>::find(T val)
 {
@@ -249,6 +257,7 @@ Node<T>* Node<T>::find(T val)
 	return 0;
 }
 
+//Recorre todo el árbol para agregar los valores a un stringstream
 template <class T>
 void Node<T>::inorder(std::stringstream &aux) const
 {
@@ -264,6 +273,7 @@ void Node<T>::inorder(std::stringstream &aux) const
 	}
 }
 
+//Recorre cada nivel del árbol y devuelve la cantidad de niveles
 template <class T>
 int Node<T>::size()
 {
@@ -286,6 +296,7 @@ int Node<T>::size()
   return level;
 }
 
+//Acomoda el objeto recibido como segundo parámetro en la raíz, reacomoda el árbol y devuelve un apuntador a la nueva raíz
 template <class T>
 Node<T>* Node<T>::splay(Node<T> *root,Node<T> *pointer)
 {
@@ -329,6 +340,7 @@ Node<T>* Node<T>::splay(Node<T> *root,Node<T> *pointer)
 	
   return pointer;
 }
+
 
 template <class T>
 void Node<T>::print_tree(std::stringstream &aux) const {
@@ -382,6 +394,8 @@ class SplayTree
     std::string print_tree() const;
     std::string preorder() const;
 };
+
+//Los métodos de SplayTree mandan a llamar a los de Node para realizar. También se encargan de los casos cuando la raíz es la afectada por los métodos
 
 template <class T>
 SplayTree<T>::SplayTree()
