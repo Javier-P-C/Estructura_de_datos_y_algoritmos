@@ -202,7 +202,7 @@ int TreeNode<T>::max_depth()
   if(le>ri)
     level = le;
   else 
-    level = right;
+    level = ri;
   balance = le - ri;
   return level;
 }
@@ -231,7 +231,7 @@ TreeNode<T>* TreeNode<T>::check_tree(T *check_val,TreeNode<T> *parent, bool *che
         parent->left = a;
       }
     }
-    else if(balance < 1)
+    else if(balance < -1)
     {
       a = balance_tree();
       *check_val = value;
@@ -366,7 +366,7 @@ bool AVL<T>::empty() const {
 
 template<class T>
 void AVL<T>::add(T val) {
-  if(empty())
+  if(!empty())
   {
     if(!root->find(val))
     {
