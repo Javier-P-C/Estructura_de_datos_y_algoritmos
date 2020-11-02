@@ -1,1 +1,2 @@
-https://repl.it/@JavierPC/Proyectoalgoritmosestructuras
+https://github.com/Javier-P-C/Proyecto_algoritmos_estructuras
+https://github.com/Javier-P-C/Proyecto_Estructura_arboles
