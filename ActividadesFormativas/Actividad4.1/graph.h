@@ -3,10 +3,11 @@
 
 #include <vector>
 #include <fstream>
-#include <list>
 #include <cmath>
 #include <iostream>
 #include <sstream>
+#include <queue>
+#include <stack>
 
 class Graph
 {
@@ -16,16 +17,18 @@ class Graph
     int *adjMat;
 
   public:
-    Graph();
+    Graph(); 
     ~Graph();
 
-    void loadGraphMat(std::string,int,int);
-    void loadGraphList(std::string,int,int);
-    std::string DFS(int,int);
-    std::string BFS(int,int);
-    std::string printAdjList();
-    std::string printAdjMat();
-
+    void loadGraphMat(std::string,int,int); //Mete los nodos a adjMat
+    void loadGraphList(std::string,int,int); //Mete los nodos a adjList
+    std::string DFS(int,int); //El recorrido de DFS junto con el camino más corto
+    std::string BFS(int,int); //El recorrido de BFS junto con el camino más corto
+    std::string printAdjList(); //Imprime AdjList
+    std::string printAdjMat(); //Imprime AdMat
+    void pathBFS(int,int,std::queue<int>&,std::stringstream&); //apoya a BFS a sacar el camino más corto
+    void aux_DFS(int,int,std::stack<int>&,bool[],std::stringstream&,bool&);
+    void pathDFS(int,int,std::stringstream&,std::stack<int>&);
     void swap(std::vector<int>&,int,int);
 };
 
@@ -37,8 +40,8 @@ Graph::Graph()
 Graph::~Graph() 
 {
   nodes = 0;
-  //delete [] adjList;
-  //adjMat.~vector();
+  delete [] adjMat;
+  adjList.~vector();
 }
 
 void Graph::swap(std::vector<int> &v,int i,int j)
@@ -180,9 +183,180 @@ void Graph::loadGraphMat(std::string doc_name,int vert,int arc)
   
 }
 
-//std::string DFS(int,int); //Depth-First Search
+std::string Graph::DFS(int start,int end) //Depth-First Search
+{
+  std::stringstream visit;
+  std::stack<int> DFS_stack;
+  bool check[nodes];
+  bool stop = false;
 
-std::string BFS(int,int); //Breadth-First Search
+  for(int i=0;i<nodes;i++)
+  {
+    check[i]=false;
+  }
+
+  visit<<"visited: ";
+  aux_DFS(start,end,DFS_stack,check,visit,stop);
+  pathDFS(start,end,visit,DFS_stack);
+  std::cout<<visit.str()<<std::endl;
+  return visit.str();
+}
+
+void Graph::aux_DFS(int start,int end,std::stack<int> &stack,bool check[],std::stringstream &visit,bool &stop)
+{
+  check[start]=true;
+  visit<<start<<" ";
+  stack.push(start);
+  if (start == end)
+  {
+    stop = true;
+    return;
+  }
+
+  for(int i=0;(i<adjList[start].size())&&(stop==false);i++)
+  {
+    if(check[adjList[start][i]]==false)
+    {
+      aux_DFS(adjList[start][i],end,stack,check,visit,stop);
+    }
+  }
+}
+
+void Graph::pathDFS(int start,int end,std::stringstream &visit,std::stack<int> &stack)
+{
+  bool check[nodes];
+  int prev[nodes];
+  visit<<"path:";
+  
+  for(int i=0;i<nodes;i++)
+  {
+    check[i]=false;
+    prev[i]=-1;
+  }
+
+  while(!stack.empty())
+  {
+    for(int i=0;i<adjList[stack.top()].size();i++)
+    {
+      if(check[adjList[stack.top()][i]]==false)
+      {
+        check[adjList[stack.top()][i]] = true;
+        std::cout<<"~~~~~~~~~"<<std::endl;
+        prev[adjList[stack.top()][i]] = stack.top();
+      }      
+    }
+    std::cout<<"--"<<stack.top();
+    std::cout<<"---"<<std::endl;
+    stack.pop();
+  }
+
+  for(int i=0;i<nodes;i++)
+  {
+    std::cout<<"m"<<prev[i]<<std::endl;
+  }
+
+  int path_finder = start;
+  std::vector<int> path_holder;
+  while (true)
+  {
+    if(path_finder == end)
+    {
+      path_holder.push_back(path_finder);
+      break;
+    }
+    path_holder.push_back(path_finder);
+    path_finder=prev[path_finder];
+  }
+
+  for(int i=0;i<path_holder.size();i++)
+  {
+    visit<<" "<<path_holder[i];
+  }
+}
+
+std::string Graph::BFS(int start,int end) //Breadth-First Search
+{
+  std::queue<int> path_helper;
+  bool check[nodes];
+  std::stringstream visit;
+
+  visit<<"visited: ";
+
+  for(int i=0;i<nodes;i++)
+  {
+    check[i]=false;
+  }
+
+  check[start] = true;
+  path_helper.push(start);
+  visit<<start<<" ";
+  if(start==end)
+    goto next;
+
+  for(int i=start;i<nodes;i++)
+  {
+    for(int j=0;j<adjList[i].size();j++)
+    {
+      if(check[adjList[i][j]]==false)
+      {
+        visit<<adjList[i][j]<<" ";
+        check[adjList[i][j]]==true;
+        path_helper.push(adjList[i][j]);
+        if(adjList[i][j]==end)
+          goto next;
+      }
+    }
+  }
+
+  next: pathBFS(start,end,path_helper,visit);
+  return visit.str();
+}
+
+void Graph::pathBFS(int start,int end,std::queue<int> &q,std::stringstream &visit)
+{
+  bool check[nodes];
+  int prev[nodes];
+
+  visit<<"path:";
+  for(int i=0;i<nodes;i++)
+  {
+    check[i]=false;
+    prev[i]=-1;
+  }
+
+  check[q.front()] = true;
+  prev[q.front()] = start;  
+  while(!q.empty())
+  {
+    for(int i=0;i<adjList[q.front()].size();i++)
+    {
+      if(check[adjList[q.front()][i]]==false)
+      {
+        check[adjList[q.front()][i]] = true;
+        prev[adjList[q.front()][i]] = q.front();
+      }      
+    }
+    q.pop();
+  }
+
+  int path_finder = end;
+  std::vector<int> path_holder;
+  while (true)
+  {
+    if(path_finder == prev[path_finder])
+    {
+      path_holder.push_back(path_finder);
+      break;
+    }
+    path_holder.push_back(path_finder);
+    path_finder=prev[path_finder];
+  }
+
+  for(int i=path_holder.size()-1;i>=0;i--)
+  {
+    visit<<" "<<path_holder[i];
+  }
+}
 
 std::string Graph::printAdjList()
 {
