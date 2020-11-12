@@ -8,6 +8,7 @@
 #include <sstream>
 #include <queue>
 #include <stack>
+#include <string>
 
 class Graph
 {
@@ -28,8 +29,10 @@ class Graph
     std::string printAdjMat(); //Imprime AdMat
     void pathBFS(int,int,std::queue<int>&,std::stringstream&); //apoya a BFS a sacar el camino más corto
     void aux_DFS(int,int,std::stack<int>&,bool[],std::stringstream&,bool&);
-    void pathDFS(int,int,std::stringstream&,std::stack<int>&);
+    void pathDFS(std::stringstream&,std::stack<int>&);
     void swap(std::vector<int>&,int,int);
+
+    std::string print_vector(std::vector<int>);
 };
 
 Graph::Graph() 
@@ -183,95 +186,67 @@ void Graph::loadGraphMat(std::string doc_name,int vert,int arc)
   
 }
 
-std::string Graph::DFS(int start,int end) //Depth-First Search
-{
-  std::stringstream visit;
-  std::stack<int> DFS_stack;
-  bool check[nodes];
-  bool stop = false;
+std::string Graph::DFS(int init_vertex, int target_vertex){
+	
+	std::vector<std::vector<int>> listsCopy;
+	for (int i=0; i<adjList.size(); i++){
+		listsCopy.push_back(adjList[i]);
+	}
 
-  for(int i=0;i<nodes;i++)
-  {
-    check[i]=false;
-  }
+	std::vector<int> stack;
+	std::vector<int> visited;
+	bool exist = false;
+	int actual = init_vertex;
 
-  visit<<"visited: ";
-  aux_DFS(start,end,DFS_stack,check,visit,stop);
-  pathDFS(start,end,visit,DFS_stack);
-  std::cout<<visit.str()<<std::endl;
-  return visit.str();
+	while (!exist && !(visited.size() >= nodes)){
+		bool already_visited = false;
+		for (int i=0; i<visited.size(); i++){
+			if(actual == visited[i]) {
+				already_visited = true;
+				break;
+			}
+		}
+
+		if (!already_visited) visited.push_back(actual);
+
+		if (actual == target_vertex){
+			exist = true;
+			break;
+		}
+
+		for (int i=0; i<listsCopy[actual].size(); i++){
+			for (int j=0; j<visited.size(); j++){
+				if(listsCopy[actual][i] == visited[j])
+					listsCopy[actual].erase(listsCopy[actual].begin()+i);
+			}
+		}
+		if (listsCopy[actual].size() > 0){
+			stack.push_back(actual);
+			int temp_index = actual;
+			actual = listsCopy[actual].back();
+			listsCopy[temp_index].pop_back();
+		} 
+		else {
+			actual = stack[stack.size()-1];
+			stack.pop_back();
+		}
+	}
+
+	stack.push_back(actual);
+	
+	std::string visited_str = print_vector(visited);
+	std::string path_str = print_vector(stack);
+	std::string result = "visited: " + visited_str + "path: " + path_str;
+	result = result.substr(0, result.size()-1);
+	return result;
 }
 
-void Graph::aux_DFS(int start,int end,std::stack<int> &stack,bool check[],std::stringstream &visit,bool &stop)
-{
-  check[start]=true;
-  visit<<start<<" ";
-  stack.push(start);
-  if (start == end)
-  {
-    stop = true;
-    return;
-  }
-
-  for(int i=0;(i<adjList[start].size())&&(stop==false);i++)
-  {
-    if(check[adjList[start][i]]==false)
-    {
-      aux_DFS(adjList[start][i],end,stack,check,visit,stop);
-    }
-  }
-}
-
-void Graph::pathDFS(int start,int end,std::stringstream &visit,std::stack<int> &stack)
-{
-  bool check[nodes];
-  int prev[nodes];
-  visit<<"path:";
-  
-  for(int i=0;i<nodes;i++)
-  {
-    check[i]=false;
-    prev[i]=-1;
-  }
-
-  while(!stack.empty())
-  {
-    for(int i=0;i<adjList[stack.top()].size();i++)
-    {
-      if(check[adjList[stack.top()][i]]==false)
-      {
-        check[adjList[stack.top()][i]] = true;
-        std::cout<<"~~~~~~~~~"<<std::endl;
-        prev[adjList[stack.top()][i]] = stack.top();
-      }      
-    }
-    std::cout<<"--"<<stack.top();
-    std::cout<<"---"<<std::endl;
-    stack.pop();
-  }
-
-  for(int i=0;i<nodes;i++)
-  {
-    std::cout<<"m"<<prev[i]<<std::endl;
-  }
-
-  int path_finder = start;
-  std::vector<int> path_holder;
-  while (true)
-  {
-    if(path_finder == end)
-    {
-      path_holder.push_back(path_finder);
-      break;
-    }
-    path_holder.push_back(path_finder);
-    path_finder=prev[path_finder];
-  }
-
-  for(int i=0;i<path_holder.size();i++)
-  {
-    visit<<" "<<path_holder[i];
-  }
+std::string Graph::print_vector(std::vector<int> vec){
+	std::string result = "";
+	for (int i=0; i<vec.size(); i++){
+		result = result + std::to_string(vec[i]) + " ";
+	}
+	return result;
 }
 
 std::string Graph::BFS(int start,int end) //Breadth-First Search
@@ -307,7 +282,6 @@ std::string Graph::BFS(int start,int end) //Breadth-First Search
       }
     }
   }
-
   next: pathBFS(start,end,path_helper,visit);
   return visit.str();
 }
@@ -385,3 +359,95 @@ std::string Graph::printAdjMat()
 }
 
 #endif
+
+
+/*std::string Graph::DFS(int start,int end) //Depth-First Search
+{
+  std::stringstream visit;
+  std::stack<int> DFS_stack;
+  bool check[nodes];
+  bool stop = false;
+
+  for(int i=0;i<nodes;i++)
+  {
+    check[i]=false;
+  }
+
+  visit<<"visited: ";
+  aux_DFS(start,end,DFS_stack,check,visit,stop);
+  pathDFS(visit,DFS_stack);
+  std::cout<<visit.str()<<std::endl;
+  return visit.str();
+}
+
+void Graph::aux_DFS(std::stack<int> &stack,bool check[],std::stringstream &visit,bool &stop)
+{
+  check[start]=true;
+  visit<<start<<" ";
+  stack.push(start);
+  if (start == end)
+  {
+    stop = true;
+    return;
+  }
+
+  for(int i=0;(i<adjList[start].size())&&(stop==false);i++)
+  {
+    if(check[adjList[start][i]]==false)
+    {
+      aux_DFS(adjList[start][i],end,stack,check,visit,stop);
+    }
+  }
+}
+
+void Graph::pathDFS(int start,int end,std::stringstream &visit,std::stack<int> &stack)
+{
+  bool check[nodes];
+  int prev[nodes];
+  visit<<"path:";
+  
+  for(int i=0;i<nodes;i++)
+  {
+    check[i]=false;
+    prev[i]=-1;
+  }
+
+  while(!stack.empty())
+  {
+    for(int i=0;i<adjList[stack.top()].size();i++)
+    {
+      if(check[adjList[stack.top()][i]]==false)
+      {
+        check[adjList[stack.top()][i]] = true;
+        std::cout<<"~~~~~~~~~"<<std::endl;
+        prev[adjList[stack.top()][i]] = stack.top();
+      }      
+    }
+    std::cout<<"--"<<stack.top();
+    std::cout<<"---"<<std::endl;
+    stack.pop();
+  }
+
+  for(int i=0;i<nodes;i++)
+  {
+    std::cout<<"m"<<prev[i]<<std::endl;
+  }
+
+  int path_finder = start;
+  std::vector<int> path_holder;
+  while (true)
+  {
+    if(path_finder == end)
+    {
+      path_holder.push_back(path_finder);
+      break;
+    }
+    path_holder.push_back(path_finder);
+    path_finder=prev[path_finder];
+  }
+
+  for(int i=0;i<path_holder.size();i++)
+  {
+    visit<<" "<<path_holder[i];
+  }
+}*/
