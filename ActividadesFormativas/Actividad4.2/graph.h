@@ -21,11 +21,11 @@ class Graph
     void loadGraphMat(std::string,int,int); //Mete los nodos a adjMat
     void loadGraphList(std::string,int,int); //Mete los nodos a adjList
     void swap(std::vector<int>&,int,int); //Apoya con intercambios de valores en arreglos
-    bool isTree();
-    std::string topologicalSort();
-    bool bipartiteGraph();
-    void auxTopologicalSort(int,std::stack<int>&,bool[],bool[]);
-    void auxBipartiteGraph(int,int,int,bool&,int[],bool[]);
+    bool isTree(); //Determina si el grafo es un arbol
+    std::string topologicalSort(); //Devuelve un string con el oreden topológico
+    bool bipartiteGraph(); //Determina si es bipartite
+    void auxTopologicalSort(int,std::stack<int>&,bool[],bool[]); //Ayuda a determinar el orden topológico
+    void auxBipartiteGraph(int,int,int,bool&,int[],bool[]); //Ayuda a determinar si es bipartite
 };
 
 Graph::Graph() 
@@ -303,7 +303,6 @@ void Graph::auxBipartiteGraph(int start,int prev,int color,bool &aux,int check[]
     color_aux = 1;
   else
     color_aux=0;
-
   for(int i=0;i<adjList[start].size();i++)
   {
     if(adjList[start][i]!=prev)
