@@ -25,6 +25,7 @@ class Graph
     std::string topologicalSort();
     bool bipartiteGraph();
     void auxTopologicalSort(int,std::stack<int>&,bool[],bool[]);
+    void auxBipartiteGraph(int,int,int,bool&,int[],bool[]);
 };
 
 Graph::Graph() 
@@ -233,9 +234,7 @@ std::string Graph::topologicalSort()
     visit<<" "<<toplogic_stack.top();
     toplogic_stack.pop();
   }
-
-  std::cout<<visit.str()<<std::endl;
-
+  //std::cout<<visit.str()<<std::endl;
   return visit.str();
 }
     
@@ -243,16 +242,16 @@ void Graph::auxTopologicalSort(int start,std::stack<int> &toplogic_stack,bool ch
 {  
   for(int i=0;i<adjList[start].size();i++)
   {
-    if(check[start]==false)
+    if(check[start]==false) //Marca que se ha pasado por este nodo
     {
       check[start]=true;
     }
-    if(check[adjList[start][i]]==false)
+    if(check[adjList[start][i]]==false) //Recusividad si el nodo vecino no ha sido visitado
     {
       auxTopologicalSort(adjList[start][i],toplogic_stack,check,check2);
     }
   }
-  if(check2[start]==false)
+  if(check2[start]==false)//Mete al stack el para ordenar los nodos
   {
     toplogic_stack.push(start);
     check2[start]=true;
@@ -262,32 +261,56 @@ void Graph::auxTopologicalSort(int start,std::stack<int> &toplogic_stack,bool ch
 bool Graph::bipartiteGraph()
 {
   int color =0; //0=rojo, 1=azul
+  bool aux = true;
 
   int check[nodes];
+  bool visit[nodes];
   for(int i=0;i<nodes;i++)
   {
     check[i]=-1;
+    visit[i]=false;
   }
 
-  for(int i=0;i<nodes;i++)
+  auxBipartiteGraph(0,-1,color,aux,check,visit);
+  return aux;
+}
+
+void Graph::auxBipartiteGraph(int start,int prev,int color,bool &aux,int check[],bool visit[])
+{
+
+  //Checa si hay inconsistencias en los colores
+  if(check[start]==-1)
   {
-    for(int j=0;j<adjList[i].size();j++)
+    check[start]=color;
+  }
+  else
+  {
+    if(check[start]!=color)
     {
-      if(check[adjList[i][j]]==-1)
-        check[adjList[i][j]]=color;
-      else
-      {
-        if(check[adjList[i][j]]!=color)
-          return false;
-      }
+      aux=false;
     }
-    if(color == 0)
-      color = 1;
-    else
-      color=0;
   }
 
-  return true;
+  //Determina si ya se ha pasado por este nodo
+  if (visit[start]==true)
+    return;
+  else
+    visit[start]=true;
+
+  //Recorre los nodos vecinos
+  int color_aux=color;
+  if(color_aux == 0)
+    color_aux = 1;
+  else
+    color_aux=0;
+
+  for(int i=0;i<adjList[start].size();i++)
+  {
+    if(adjList[start][i]!=prev)
+    {
+      auxBipartiteGraph(adjList[start][i],start,color_aux,aux,check,visit);
+    }
+  }
 }
 
 #endif
