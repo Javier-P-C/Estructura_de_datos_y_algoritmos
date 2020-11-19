@@ -210,7 +210,7 @@ std::string Graph::BFS(int start,int end) //Breadth-First Search
       if(check[adjList[i][j]]==false)
       {
         visit<<adjList[i][j]<<" ";
-        check[adjList[i][j]]==true;
+        check[adjList[i][j]]=true;
         path_helper.push(adjList[i][j]);
         if(adjList[i][j]==end)
           goto next;

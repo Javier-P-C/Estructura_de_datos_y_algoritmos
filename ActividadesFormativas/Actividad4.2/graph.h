@@ -176,7 +176,7 @@ void Graph::loadGraphMat(std::string doc_name,int vert,int arc)
   }
 }
 
-bool Graph::isTree()
+bool Graph::isTree()//NF
 {
   
 
