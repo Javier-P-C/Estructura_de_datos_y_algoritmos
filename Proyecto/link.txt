@@ -1,3 +1,8 @@
+1°  Y 2° ENTREGA
 https://github.com/Javier-P-C/Proyecto_algoritmos_estructuras
+ENTREGA ÁRBOLES
 https://github.com/Javier-P-C/Proyecto_Estructura_arboles
+ENTREGA GRAFOS
 https://github.com/Javier-P-C/Proyecto_EstructurasAlgoritmos_Grafo
+ENTREGA ESTRUCTURA NUEVA
+https://github.com/Javier-P-C/ProyectoEstructuraGrafoPonderado
